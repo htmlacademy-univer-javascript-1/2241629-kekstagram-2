@@ -1,5 +1,5 @@
 import {photos} from './gen-data.js';
-import {openModal} from './modal.js';
+import {openBigPicModal} from './big-picture.js';
 
 const photosArray = photos();
 
@@ -19,7 +19,9 @@ photosArray.forEach((element) => {
   pictureLikes.textContent = element.likes;
   pictureComments.textContent = element.comments.length;
 
-  pictureTemplate.addEventListener('click', () => openModal(element));
+  pictureTemplate.addEventListener('click', () => {
+    openBigPicModal(element);
+  });
 
   fragment.append(pictureTemplate);
 });
