@@ -1,3 +1,4 @@
+
 import {isEscapeKey, isMouseClick, toggleClass} from './utils.js';
 
 const COMMENTS_SHOWEN = 5;
@@ -28,7 +29,8 @@ const fillBigPicComments = (comments) => {
     </li>`;
     return accumulator;
   }, '');
- bigPicComments.insertAdjacentHTML('beforeend', commentsList);
+
+  bigPicComments.insertAdjacentHTML('beforeend', commentsList);
 };
 
 const fillCommentsCount = () => {
