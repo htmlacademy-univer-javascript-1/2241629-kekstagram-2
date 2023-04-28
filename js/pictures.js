@@ -1,4 +1,6 @@
 import {photos} from './gen-data.js';
+import {openModal} from './modal.js';
+
 const photosArray = photos();
 
 const pictures = document.querySelector('.pictures');
@@ -7,15 +9,17 @@ const picturesTemplate = document.querySelector('#picture').content.querySelecto
 
 const fragment = document.createDocumentFragment();
 
-photosArray.forEach(({url, likes, comments}) => {
+photosArray.forEach((element) => {
   const pictureTemplate = picturesTemplate.cloneNode(true);
   const pictureImg = pictureTemplate.querySelector('.picture__img');
   const pictureLikes = pictureTemplate.querySelector('.picture__likes');
   const pictureComments = pictureTemplate.querySelector('.picture__comments');
 
-  pictureImg.src = url;
-  pictureLikes.textContent = likes;
-  pictureComments.textContent = comments.length;
+  pictureImg.src = element.url;
+  pictureLikes.textContent = element.likes;
+  pictureComments.textContent = element.comments.length;
+
+  pictureTemplate.addEventListener('click', () => openModal(element));
 
   fragment.append(pictureTemplate);
 });
