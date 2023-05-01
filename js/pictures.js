@@ -1,31 +1,30 @@
-import {photos} from './gen-data.js';
 import {openBigPicModal} from './big-picture.js';
 
-const photosArray = photos();
+const addPictures = (photosArray) => {
+  const pictures = document.querySelector('.pictures');
+  const picturesElement = pictures.querySelectorAll('.picture');
+  picturesElement.forEach((element) => element.remove());
+  const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
+  const fragment = document.createDocumentFragment();
 
-const pictures = document.querySelector('.pictures');
+  photosArray.forEach((element) => {
+    const pictureTemplate = picturesTemplate.cloneNode(true);
+    const pictureImg = pictureTemplate.querySelector('.picture__img');
+    const pictureLikes = pictureTemplate.querySelector('.picture__likes');
+    const pictureComments = pictureTemplate.querySelector('.picture__comments');
 
-const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
+    pictureImg.src = element.url;
+    pictureLikes.textContent = element.likes;
+    pictureComments.textContent = element.comments.length;
 
-const fragment = document.createDocumentFragment();
+    pictureTemplate.addEventListener('click', () => {
+      openBigPicModal(element);
+    });
 
-photosArray.forEach((element) => {
-  const pictureTemplate = picturesTemplate.cloneNode(true);
-  const pictureImg = pictureTemplate.querySelector('.picture__img');
-  const pictureLikes = pictureTemplate.querySelector('.picture__likes');
-  const pictureComments = pictureTemplate.querySelector('.picture__comments');
-
-  pictureImg.src = element.url;
-  pictureLikes.textContent = element.likes;
-  pictureComments.textContent = element.comments.length;
-
-  pictureTemplate.addEventListener('click', () => {
-    openBigPicModal(element);
+    fragment.append(pictureTemplate);
   });
 
-  fragment.append(pictureTemplate);
-});
-
-const addPictures = () => pictures.appendChild(fragment);
+  pictures.appendChild(fragment);
+};
 
 export {addPictures};
