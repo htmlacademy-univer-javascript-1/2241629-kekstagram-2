@@ -12,9 +12,8 @@ const bigPicCommentsElement = bigPicElement.querySelector('.social__comments');
 const bigPicCommentsLoaderElement = bigPicElement.querySelector('.social__comments-loader');
 const bigPicShowenCommentsCountElement = bigPicElement.querySelector('.social__comment-count');
 
-
 let shownCommentsCount = 0;
-let totalCommentList = [];
+let totalCommentLists = [];
 let totalCommentListLength = 0;
 
 const fillBigPicComments = (comments) => {
@@ -50,7 +49,7 @@ const renderBigPic = ({url, likes, description, comments}) => {
   fillCommentsCount();
 };
 
-const loadMoreCommentHandler = () => {
+const loadMoreComments = () => {
   const bigPicComment = bigPicCommentsElement.querySelectorAll('.social__comment.hidden');
   const commentsForShowCount = bigPicComment.length < COMMENTS_SHOWEN ? bigPicComment.length : COMMENTS_SHOWEN;
   shownCommentsCount += commentsForShowCount;
@@ -66,26 +65,42 @@ const tooglePictureModal = (isHidden) => {
   bigPicCommentsElement.innerHTML = '';
 };
 
-const closeBigPicModal = (evt) => {
-  evt.preventDefault();
-  if (checkIsEscapeKey(evt) || checkIsMouseClick(evt)) {
-    tooglePictureModal(false);
-    document.removeEventListener('keydown', closeBigPicModal);
-    bigPicCloseButtonElement.removeEventListener('click', closeBigPicModal);
-    bigPicCommentsLoaderElement.removeEventListener('click', loadMoreCommentHandler);
-    shownCommentsCount = 0;
-    bigPicCommentsLoaderElement.classList.remove('hidden');
-  }
+const closeBigPicModal = () => {
+  shownCommentsCount = 0;
+  bigPicCommentsLoaderElement.classList.remove('hidden');
+  tooglePictureModal(false);
+  document.removeEventListener('keydown', onDocumentEscKeydown);
+  bigPicCloseButtonElement.removeEventListener('click', onCloseButtonClick);
+  bigPicCommentsLoaderElement.removeEventListener('click', onCommentsLoaderClick);
 };
 
 const openBigPicModal = (element) => {
-  bigPicCommentsLoaderElement.addEventListener('click', loadMoreCommentHandler);
-  totalCommentList = element.comments;
-  totalCommentListLength = totalCommentList.length;
-  tooglePictureModal(true);
+  totalCommentLists = element.comments;
+  totalCommentListLength = totalCommentLists.length;
   renderBigPic(element);
-  document.addEventListener('keydown', closeBigPicModal);
-  bigPicCloseButtonElement.addEventListener('click', closeBigPicModal);
+  tooglePictureModal(true);
+  document.addEventListener('keydown', onDocumentEscKeydown);
+  bigPicCloseButtonElement.addEventListener('click', onCloseButtonClick);
+  bigPicCommentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 };
+
+function onCommentsLoaderClick (evt) {
+  if(checkIsMouseClick(evt)) {
+    loadMoreComments();
+  }
+}
+
+function onDocumentEscKeydown (evt) {
+  if(checkIsEscapeKey(evt)) {
+    closeBigPicModal();
+  }
+}
+
+function onCloseButtonClick (evt) {
+  evt.preventDefault();
+  if(checkIsMouseClick(evt)) {
+    closeBigPicModal();
+  }
+}
 
 export {openBigPicModal};
